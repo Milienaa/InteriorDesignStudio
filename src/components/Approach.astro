@@ -1,0 +1,144 @@
+---
+import SectionHead from './SectionHead.astro';
+import { approach } from '../content/site';
+
+/** Sun height on a small horizon drawing for the three study hours. */
+const suns = [
+  { cx: 22, cy: 34 },
+  { cx: 48, cy: 14 },
+  { cx: 74, cy: 34 },
+];
+---
+
+<section id="approach" class="band" data-tone="chalk" data-section-hour={approach.hour} aria-labelledby="approach-title">
+  <div class="wrap">
+    <SectionHead hour={approach.hour} label={approach.label} title={approach.title} id="approach-title" />
+
+    <div class="grid body">
+      <p class="statement">{approach.statement}</p>
+
+      <ol class="steps">
+        {approach.steps.map((s, i) => (
+          <li>
+            <svg class="horizon" viewBox="0 0 96 40" width="96" height="40" aria-hidden="true" focusable="false">
+              <line x1="0" y1="38" x2="96" y2="38" />
+              <circle cx={suns[i]!.cx} cy={suns[i]!.cy} r="4" />
+              <line x1={suns[i]!.cx} y1={suns[i]!.cy + 6} x2={suns[i]!.cx} y2="38" stroke-dasharray="2 3" />
+            </svg>
+            <p class="label"><span class="hour">{s.n}</span></p>
+            <h3>{s.name}</h3>
+            <p class="step-text">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="flats">
+      <h3 class="flats-title">{approach.flatsTitle}</h3>
+      <dl>
+        {approach.flats.map((f) => (
+          <div class="flat">
+            <dt>{f.name}</dt>
+            <dd>{f.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .body {
+    row-gap: var(--s-5);
+  }
+  .statement {
+    grid-column: 1 / -1;
+    font: 300 clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem) / 1.3 var(--serif);
+    font-variation-settings: 'opsz' 48;
+    max-width: 26em;
+    text-wrap: pretty;
+  }
+  .steps {
+    grid-column: 1 / -1;
+    list-style: none;
+    display: grid;
+    gap: var(--s-4);
+  }
+  .steps li {
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-2);
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+  .horizon {
+    stroke: var(--ink);
+    stroke-width: 1;
+    fill: none;
+  }
+  .horizon circle {
+    fill: var(--sun);
+    stroke: none;
+  }
+  .steps h3 {
+    font-size: var(--fs-h3);
+    font-weight: 400;
+    font-variation-settings: 'opsz' 36;
+  }
+  .step-text {
+    color: var(--fg-mute);
+    max-width: 30em;
+  }
+  .flats {
+    margin-top: clamp(3rem, 8vw, 6rem);
+    display: grid;
+    gap: var(--s-3);
+  }
+  .flats-title {
+    font: 500 var(--fs-label) / 1.3 var(--sans);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+  .flat {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: var(--s-3);
+    border-top: 1px solid var(--line);
+  }
+  .flat:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .flat dt {
+    font: 300 clamp(1.75rem, 1.3rem + 1.6vw, 2.75rem) / 1.05 var(--serif);
+    font-variation-settings: 'opsz' 72;
+    letter-spacing: -0.01em;
+  }
+  .flat dd {
+    max-width: 36em;
+    color: var(--fg-mute);
+  }
+
+  @media (min-width: 900px) {
+    .statement {
+      grid-column: 1 / 8;
+    }
+    .steps {
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--s-4);
+    }
+    .flats {
+      grid-template-columns: 200px minmax(0, 1fr);
+      column-gap: var(--s-4);
+    }
+    .flats-title {
+      padding-top: var(--s-3);
+    }
+    .flat {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      column-gap: var(--s-4);
+      align-items: baseline;
+    }
+  }
+</style>

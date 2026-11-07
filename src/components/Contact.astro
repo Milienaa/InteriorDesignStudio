@@ -1,0 +1,269 @@
+---
+import SectionHead from './SectionHead.astro';
+import { contact, brand } from '../content/site';
+const f = contact.form;
+---
+
+<section id="contact" class="band" data-tone="dusk" data-section-hour={contact.hour} aria-labelledby="contact-title">
+  <div class="wrap grid body">
+    <div class="intro">
+      <SectionHead hour={contact.hour} label={contact.label} title={contact.title} id="contact-title" />
+      <p class="lead">{contact.text}</p>
+      <dl class="direct">
+        {contact.direct.map((d) => (
+          <div>
+            <dt class="label">{d.label}</dt>
+            <dd>{d.href ? <a href={d.href} rel={d.href.startsWith('http') ? 'noopener' : undefined}>{d.value}</a> : d.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <form
+      class="form"
+      method="post"
+      action={`mailto:${brand.email}`}
+      enctype="text/plain"
+      novalidate
+      data-contact-form
+      data-email={brand.email}
+    >
+      <div class="field">
+        <label for="c-name">{f.name.label}</label>
+        <input id="c-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name" />
+        <p class="error" id="e-name" hidden>{f.errors.name}</p>
+      </div>
+
+      <div class="field">
+        <label for="c-email">{f.email.label}</label>
+        <input
+          id="c-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          inputmode="email"
+          placeholder={f.email.placeholder}
+          required
+          aria-describedby="e-email"
+        />
+        <p class="error" id="e-email" hidden>{f.errors.email}</p>
+      </div>
+
+      <div class="field small">
+        <label for="c-area">{f.area.label}</label>
+        <div class="unit-wrap">
+          <input id="c-area" name="area" type="number" inputmode="numeric" min="20" max="1000" step="1" required aria-describedby="e-area" />
+          <span class="unit" aria-hidden="true">{f.area.unit}</span>
+        </div>
+        <p class="error" id="e-area" hidden>{f.errors.area}</p>
+      </div>
+
+      <div class="field small">
+        <label for="c-facing">{f.facing.label}</label>
+        <select id="c-facing" name="facing">
+          {f.facing.options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+
+      <div class="field small">
+        <label for="c-service">{f.service.label}</label>
+        <select id="c-service" name="service">
+          {f.service.options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+
+      <div class="field small">
+        <label for="c-budget">{f.budget.label}</label>
+        <select id="c-budget" name="budget">
+          {f.budget.options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+
+      <div class="field small">
+        <label for="c-start">{f.start.label}</label>
+        <select id="c-start" name="start">
+          {f.start.options.map((o) => <option value={o}>{o}</option>)}
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="c-message">{f.message.label} <span class="mute">(optional)</span></label>
+        <textarea id="c-message" name="message" rows="4" placeholder={f.message.placeholder}></textarea>
+      </div>
+
+      <div class="submit">
+        <button class="btn btn-ink" type="submit">{f.submit}</button>
+        <p class="help mute" data-form-help>{f.help}</p>
+        <p class="help sent" data-form-sent hidden>
+          {f.sent} <a href={`mailto:${brand.email}`}>{brand.email}</a>.
+        </p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  .body {
+    row-gap: var(--s-5);
+  }
+  .intro {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+  }
+  .intro :global(.sec-head) {
+    margin-bottom: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .intro :global(.sec-head .label) {
+    padding-top: 0;
+  }
+  .lead {
+    max-width: 28em;
+    color: var(--dusk-text);
+  }
+  .direct {
+    display: grid;
+    gap: var(--s-2);
+    border-top: 1px solid var(--rule);
+    padding-top: var(--s-3);
+  }
+  .direct div {
+    display: grid;
+    grid-template-columns: 6em minmax(0, 1fr);
+    gap: var(--s-2);
+    align-items: baseline;
+  }
+  .direct a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--lamplight);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+  .direct div {
+    align-items: center;
+  }
+  .direct a:hover {
+    color: var(--dusk-text);
+  }
+  .form {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-3) var(--s-3);
+    align-content: start;
+  }
+  .field {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+  label {
+    font-weight: 500;
+    font-size: var(--fs-small);
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.6rem 0.9rem;
+    background: var(--dusk-2);
+    color: var(--dusk-text);
+    border: 1px solid var(--dusk-line);
+    border-radius: 6px;
+    transition: border-color var(--t-hover) var(--ease);
+  }
+  textarea {
+    resize: vertical;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--dusk-mute);
+    opacity: 1;
+  }
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--dusk-mute);
+  }
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--lamplight);
+    outline-offset: 2px;
+    border-color: var(--lamplight);
+  }
+  select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--dusk-mute) 50%),
+      linear-gradient(135deg, var(--dusk-mute) 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 55%,
+      calc(100% - 13px) 55%;
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.4rem;
+  }
+  .unit-wrap {
+    position: relative;
+  }
+  .unit-wrap input {
+    padding-right: 3rem;
+  }
+  .unit {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--dusk-mute);
+  }
+  [aria-invalid='true'] {
+    border-color: #e39a8f;
+  }
+  .error {
+    font-size: 0.875rem;
+    color: #f0b1a6;
+  }
+  .error[hidden] {
+    display: none;
+  }
+  .submit {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--s-2);
+    justify-items: start;
+    padding-top: var(--s-2);
+  }
+  .help {
+    font-size: var(--fs-small);
+    max-width: 36em;
+  }
+  .sent {
+    color: var(--lamplight);
+  }
+  .sent a {
+    color: inherit;
+  }
+
+  @media (min-width: 640px) {
+    .field.small {
+      grid-column: auto;
+    }
+  }
+  @media (min-width: 900px) {
+    .intro {
+      grid-column: 1 / 6;
+    }
+    .form {
+      grid-column: 7 / -1;
+    }
+  }
+</style>

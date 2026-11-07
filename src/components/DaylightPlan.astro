@@ -1,0 +1,134 @@
+---
+/**
+ * A plan drawing with three light states. Which state shows is driven by the
+ * radio buttons in ProjectPlate via CSS :has(), so it works without JavaScript.
+ */
+import type { Project } from '../content/site';
+
+interface Props {
+  plan: Project['plan'];
+  id: string;
+}
+const { plan, id } = Astro.props;
+const hatchId = `hatch-${id}`;
+// Compass arc: east on the left, west on the right.
+const arc = (t: number) => {
+  const a = Math.PI * (1 - t);
+  return { x: 268 + 32 * Math.cos(a), y: 246 - 24 * Math.sin(a) };
+};
+---
+
+<svg class="plan" viewBox="0 0 320 258" role="img" aria-labelledby={`${id}-plan-title`}>
+  <title id={`${id}-plan-title`}>Daylight plan showing where light falls at 08:00, 13:00 and 18:00</title>
+  <defs>
+    <pattern id={hatchId} width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="5" class="hatch-line" />
+    </pattern>
+  </defs>
+
+  <g class="rooms">
+    {plan.rooms.map((r) => (
+      <g>
+        <rect x={r.x} y={r.y} width={r.w} height={r.h} />
+        <text x={r.x + 6} y={r.y + 13}>{r.name}</text>
+      </g>
+    ))}
+  </g>
+
+  {plan.states.map((s) => (
+    <g class="pool" data-hour={s.hour}>
+      {s.pools.map((p) => (
+        <>
+          <polygon points={p} class="pool-fill" />
+          <polygon points={p} fill={`url(#${hatchId})`} />
+        </>
+      ))}
+    </g>
+  ))}
+
+  <g class="windows">
+    {plan.windows.map((w) => (
+      <line x1={w.x1} y1={w.y1} x2={w.x2} y2={w.y2} />
+    ))}
+  </g>
+
+  <g class="compass" aria-hidden="true">
+    <path d="M236 246 A32 24 0 0 1 300 246" />
+    <line x1="230" y1="246" x2="306" y2="246" />
+    {plan.states.map((s) => (
+      <circle class="sun-dot" data-hour={s.hour} cx={arc(s.sun).x} cy={arc(s.sun).y} r="3.5" />
+    ))}
+    <text x="222" y="249">E</text>
+    <text x="309" y="249">W</text>
+    <text x="20" y="249" class="legend">Light at the chosen hour</text>
+  </g>
+</svg>
+
+<style>
+  .plan {
+    width: 100%;
+    height: auto;
+    background: var(--noon);
+    font: 500 8.5px / 1 var(--sans);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .rooms rect {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+  .rooms text {
+    fill: var(--mute);
+  }
+  .windows line {
+    stroke: var(--sun);
+    stroke-width: 3;
+  }
+  .hatch-line {
+    stroke: var(--sun);
+    stroke-width: 1;
+    stroke-opacity: 0.55;
+  }
+  .pool {
+    opacity: 0;
+    transition: opacity var(--t-open) var(--ease);
+  }
+  .pool-fill {
+    fill: var(--sun);
+    fill-opacity: 0.1;
+  }
+  .compass path,
+  .compass line {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .compass text {
+    fill: var(--mute);
+    font-size: 8px;
+  }
+  .legend {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-size: 9px;
+  }
+  /* On phones the drawing shrinks with the screen, so its labels are drawn larger to stay at 12px+ */
+  @media (max-width: 640px) {
+    .plan {
+      font-size: 12.5px;
+      letter-spacing: 0.03em;
+    }
+    .compass text {
+      font-size: 12.5px;
+    }
+    .legend {
+      font-size: 12.5px;
+    }
+  }
+  .sun-dot {
+    fill: var(--line);
+    transition: fill var(--t-open) var(--ease);
+  }
+</style>

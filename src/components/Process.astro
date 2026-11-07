@@ -1,0 +1,140 @@
+---
+import SectionHead from './SectionHead.astro';
+import { process } from '../content/site';
+const total = process.steps.reduce((n, s) => n + s.span, 0);
+---
+
+<section id="process" class="band" data-tone="limestone" data-section-hour={process.hour} aria-labelledby="process-title">
+  <div class="wrap">
+    <SectionHead hour={process.hour} label={process.label} title={process.title} id="process-title" lead={process.intro} />
+
+    <!-- Proportional week bar: ten weeks, one block per step. Decorative; the list below carries the content. -->
+    <div class="weeks" style={`--total:${total}`} aria-hidden="true">
+      {process.steps.map((s) => (
+        <span class="week" style={`--span:${s.span}`}>
+          <i class="num">{s.n}</i>
+          <b class="num">{s.when}</b>
+        </span>
+      ))}
+    </div>
+
+    <ol class="steps">
+      {process.steps.map((s) => (
+        <li>
+          <span class="n num" aria-hidden="true">{s.n}</span>
+          <p class="when label"><span class="hour">{s.when}</span></p>
+          <h3>{s.name}</h3>
+          <p class="text">{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .weeks {
+    display: none;
+  }
+  .steps {
+    list-style: none;
+    display: grid;
+    gap: var(--s-4);
+    border-top: 1px solid var(--ink);
+    padding-top: var(--s-4);
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-areas:
+      'n when'
+      'n title'
+      'n text';
+    column-gap: var(--s-2);
+    row-gap: 0.3rem;
+    min-width: 0;
+  }
+  .n {
+    grid-area: n;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    background: var(--noon);
+    border: 1px solid var(--line);
+    font: 300 1.25rem / 1 var(--serif);
+  }
+  .when {
+    grid-area: when;
+  }
+  h3 {
+    grid-area: title;
+    font-size: var(--fs-h3);
+    font-weight: 400;
+    font-variation-settings: 'opsz' 36;
+  }
+  .text {
+    grid-area: text;
+    color: var(--fg-mute);
+    font-size: var(--fs-small);
+    max-width: 30em;
+  }
+
+  @media (min-width: 900px) {
+    .weeks {
+      display: grid;
+      grid-template-columns: repeat(var(--total), minmax(0, 1fr));
+      gap: 4px;
+      border-top: 1px solid var(--ink);
+      padding-top: var(--s-3);
+    }
+    .week {
+      grid-column: span var(--span);
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      min-height: 60px;
+      padding: 0.75rem 0.9rem;
+      background: var(--noon);
+      border: 1px solid var(--line);
+      min-width: 0;
+      overflow: hidden;
+    }
+    .week i {
+      font: 300 1.5rem / 1 var(--serif);
+      font-style: normal;
+    }
+    .week b {
+      font: 500 0.7rem / 1.2 var(--sans);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-mute);
+      white-space: nowrap;
+    }
+    .steps {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      column-gap: var(--s-4);
+      border-top: 0;
+      padding-top: var(--s-4);
+    }
+    .steps li {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        'n'
+        'when'
+        'title'
+        'text';
+      row-gap: 0.5rem;
+      align-content: start;
+    }
+    .n {
+      width: auto;
+      height: auto;
+      background: none;
+      border: 0;
+      place-items: start;
+      font-size: 2.5rem;
+      color: var(--slate);
+      margin-bottom: 0.25rem;
+    }
+  }
+</style>

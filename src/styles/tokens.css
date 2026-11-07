@@ -1,0 +1,464 @@
+/* Oriel design tokens and base styles. Palette, type and motion follow docs/brand/brand-board.html. */
+
+:root {
+  color-scheme: light;
+
+  /* Colour: warm light, cool shadow */
+  --chalk: #f1efea;
+  --noon: #f8f7f4;
+  --limestone: #e5e1d9;
+  --line: #d3cec4;
+  --field: #878177;
+  --ink: #1f2328;
+  --mute: #585d64;
+  --slate: #3e5568;
+  --slate-deep: #2e4152;
+  --sun: #c29243;
+  --dusk: #1a1f26;
+  --dusk-2: #22282f;
+  --dusk-text: #eceae5;
+  --dusk-mute: #9da5ae;
+  --dusk-slate: #9db3c6;
+  --dusk-line: #333a43;
+  --lamplight: #d8b26e;
+
+  /* Semantic */
+  --bg: var(--chalk);
+  --fg: var(--ink);
+  --fg-mute: var(--mute);
+  --accent: var(--slate);
+  --rule: var(--line);
+  --focus: var(--slate);
+
+  /* Type */
+  --serif: 'Newsreader Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --sans: 'Hanken Grotesk Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --fs-display: clamp(2.75rem, 1.2rem + 6vw, 6rem);
+  --fs-h2: clamp(2.125rem, 1.3rem + 3.2vw, 4rem);
+  --fs-h3: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  --fs-lead: clamp(1.1875rem, 1.05rem + 0.5vw, 1.375rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-label: 0.75rem;
+
+  /* Space */
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --wrap: 1240px;
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 3rem;
+  --s-6: 4.5rem;
+  --s-7: 7rem;
+  --section: clamp(4rem, 8vw, 7.5rem);
+
+  /* Motion: nothing moves unless you do */
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --t-hover: 150ms;
+  --t-open: 250ms;
+  --t-fade: 400ms;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 var(--fs-body) / 1.6 var(--sans);
+  font-feature-settings: 'tnum' 1;
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+h1 em,
+h2 em,
+.serif-i {
+  font-style: italic;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--t-hover) var(--ease);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Layout */
+.band {
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px));
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+section[data-tone] {
+  padding-block: var(--section);
+}
+
+[data-tone='chalk'] {
+  background: var(--chalk);
+}
+
+[data-tone='noon'] {
+  background: var(--noon);
+}
+
+[data-tone='limestone'] {
+  background: var(--limestone);
+}
+
+[data-tone='dusk'] {
+  --bg: var(--dusk);
+  --fg: var(--dusk-text);
+  --fg-mute: var(--dusk-mute);
+  --accent: var(--lamplight);
+  --rule: var(--dusk-line);
+  --focus: var(--lamplight);
+  background: var(--dusk);
+  color: var(--dusk-text);
+}
+
+/* Type helpers */
+.label {
+  font: 500 var(--fs-label) / 1.3 var(--sans);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+
+.label .hour {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+}
+
+.mute {
+  color: var(--fg-mute);
+}
+
+.cap {
+  margin-top: var(--s-1);
+  font: italic 400 var(--fs-small) / 1.4 var(--serif);
+  font-variation-settings: 'opsz' 16;
+  color: var(--fg-mute);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Buttons: every one says what happens next */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 48px;
+  padding: 0.7em 1.4em;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: 500 1rem / 1.2 var(--sans);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--t-hover) var(--ease),
+    color var(--t-hover) var(--ease),
+    border-color var(--t-hover) var(--ease);
+}
+
+.btn-ink {
+  background: var(--ink);
+  color: var(--chalk);
+}
+
+.btn-ink:hover {
+  background: var(--slate);
+  color: var(--chalk);
+}
+
+.btn-line {
+  border-color: var(--field);
+  color: var(--fg);
+  background: transparent;
+}
+
+.btn-line:hover {
+  border-color: var(--ink);
+  color: var(--fg);
+}
+
+[data-tone='dusk'] .btn-ink {
+  background: var(--lamplight);
+  color: var(--dusk);
+}
+
+[data-tone='dusk'] .btn-ink:hover {
+  background: #e6c27f;
+  color: var(--dusk);
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  line-height: 1.2;
+  padding-block: 0.6em;
+}
+
+.link-arrow:hover {
+  color: var(--accent);
+}
+
+/* Section head: hour label + headline */
+.sec-head {
+  display: grid;
+  gap: var(--s-2);
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+
+.sec-head h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.04;
+  max-width: 14em;
+}
+
+.sec-head .lead {
+  max-width: 34em;
+  color: var(--fg-mute);
+}
+
+@media (min-width: 900px) {
+  .sec-head {
+    grid-template-columns: 200px minmax(0, 1fr);
+    column-gap: var(--s-4);
+    align-items: start;
+  }
+
+  .sec-head .label {
+    padding-top: 0.9em;
+  }
+
+  .sec-head .lead {
+    grid-column: 2;
+  }
+}
+
+/* Hairline rules */
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+/* Photo fade-in, once, on load (JS only; without JS photos are simply visible) */
+.js img.fade {
+  opacity: 0;
+  transition: opacity var(--t-fade) var(--ease);
+}
+
+.js img.fade.is-loaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .js img.fade {
+    opacity: 1;
+  }
+}
+
+/* Light motion: one easing, reveal once, nothing loops.
+   Hidden only when JS has tagged the element, so content never disappears without JS. */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-reveal: 800ms;
+}
+
+/* Hiding is instant; only the way in is animated. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.js [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--t-reveal) var(--ease-out),
+    transform var(--t-reveal) var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+
+/* Hero enters on load, in reading order */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.js .hero h1,
+.js .hero .copy,
+.js .hero .photo,
+.js .hero .facts {
+  animation: rise 900ms var(--ease-out) both;
+}
+.js .hero .copy {
+  animation-delay: 120ms;
+}
+.js .hero .photo {
+  animation-delay: 220ms;
+}
+.js .hero .facts {
+  animation-delay: 360ms;
+}
+
+/* Project photos breathe a little on hover (pointer devices only) */
+@media (hover: hover) {
+  .plate .photo picture {
+    display: block;
+    overflow: hidden;
+  }
+  .plate .photo img {
+    transition:
+      transform 1200ms var(--ease-out),
+      opacity var(--t-fade) var(--ease);
+  }
+  .plate .photo:hover img {
+    transform: scale(1.025);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  .js .hero h1,
+  .js .hero .copy,
+  .js .hero .photo,
+  .js .hero .facts {
+    animation: none;
+  }
+  .plate .photo:hover img {
+    transform: none;
+  }
+}

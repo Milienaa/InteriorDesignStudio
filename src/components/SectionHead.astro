@@ -1,0 +1,16 @@
+---
+interface Props {
+  hour: string;
+  label: string;
+  title: string;
+  id: string;
+  lead?: string;
+}
+const { hour, label, title, id, lead } = Astro.props;
+---
+
+<div class="sec-head">
+  <p class="label"><span class="hour">{hour}</span> · {label}</p>
+  <h2 id={id}>{title}</h2>
+  {lead && <p class="lead">{lead}</p>}
+</div>

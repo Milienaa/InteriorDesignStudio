@@ -1,0 +1,102 @@
+---
+import Logo from './Logo.astro';
+import { nav, brand, footer } from '../content/site';
+---
+
+<footer class="site-footer band" data-tone="dusk">
+  <div class="wrap">
+    <hr class="rule" />
+    <div class="row">
+      <a class="home" href="#top" aria-label={`${brand.name}, back to top`} style="--logo-sun: var(--lamplight)">
+        <Logo size={34} sub={brand.tagline} />
+      </a>
+      <nav aria-label="Footer">
+        <ul>
+          {nav.map((n) => (
+            <li><a href={n.href}>{n.label}</a></li>
+          ))}
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="contact">
+        <a href={`mailto:${brand.email}`}>{brand.email}</a>
+        <a href={brand.telegram} rel="noopener">{brand.telegramHandle}</a>
+        <span class="mute">{brand.address}</span>
+      </div>
+    </div>
+    <div class="legal">
+      <p class="mute">{footer.disclaimer}</p>
+      <p class="mute num">{footer.copyright}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--s-4) calc(var(--s-5) + env(safe-area-inset-bottom, 0px));
+  }
+  .row {
+    display: grid;
+    gap: var(--s-4);
+    padding-block: var(--s-4);
+  }
+  .home {
+    text-decoration: none;
+    justify-self: start;
+  }
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem var(--s-3);
+  }
+  nav a,
+  .contact a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition:
+      color var(--t-hover) var(--ease),
+      border-color var(--t-hover) var(--ease);
+  }
+  nav a:hover,
+  .contact a:hover {
+    color: var(--lamplight);
+    border-color: var(--lamplight);
+  }
+  .contact {
+    display: grid;
+    justify-items: start;
+    gap: 0.25rem;
+    font-size: var(--fs-small);
+  }
+  .legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-1) var(--s-4);
+    padding-top: var(--s-3);
+    border-top: 1px solid var(--rule);
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 900px) {
+    .row {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      column-gap: var(--s-5);
+      align-items: start;
+    }
+    nav ul {
+      flex-wrap: nowrap;
+      gap: 0.25rem clamp(1rem, 2vw, 1.75rem);
+    }
+    nav a {
+      white-space: nowrap;
+    }
+    .contact {
+      justify-items: end;
+      text-align: right;
+    }
+  }
+</style>

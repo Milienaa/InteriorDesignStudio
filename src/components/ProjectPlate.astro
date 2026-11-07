@@ -1,0 +1,292 @@
+---
+import { Picture } from 'astro:assets';
+import DaylightPlan from './DaylightPlan.astro';
+import type { Project } from '../content/site';
+import { work } from '../content/site';
+
+interface Props {
+  project: Project;
+  flip?: boolean;
+}
+const { project: p, flip = false } = Astro.props;
+---
+
+<article class:list={['plate', { flip }]} id={`project-${p.id}`} aria-labelledby={`${p.id}-title`}>
+  <figure class="photo">
+    <Picture
+      src={p.photo.src}
+      alt={p.photo.alt}
+      widths={[480, 800, 1200]}
+      sizes="(min-width: 900px) 58vw, 100vw"
+      formats={['avif', 'webp']}
+      loading="lazy"
+      class="fade"
+    />
+    <figcaption class="cap">{p.photo.caption}</figcaption>
+  </figure>
+
+  <div class="info">
+    <p class="label"><span class="hour">Project {p.n}</span></p>
+    <h3 id={`${p.id}-title`}>{p.name}</h3>
+    <dl class="tb">
+      {p.facts.map((f) => (
+        <div>
+          <dt>{f.label}</dt>
+          <dd class="num">{f.value}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="story">{p.story}</p>
+  </div>
+
+  <div class="light">
+    <fieldset class="hours">
+      <legend class="label">{work.lightStudyLabel}</legend>
+      {p.plan.states.map((s, i) => (
+        <label class="hour-opt">
+          <input type="radio" name={`hour-${p.id}`} value={s.hour} checked={i === 1} />
+          <span class="num">{s.hour}</span>
+        </label>
+      ))}
+    </fieldset>
+    <DaylightPlan plan={p.plan} id={p.id} />
+    <div class="notes" aria-live="polite">
+      {p.plan.states.map((s) => (
+        <p class="note cap" data-hour={s.hour}>
+          <span class="num">{s.hour}</span> — {s.note}
+        </p>
+      ))}
+    </div>
+  </div>
+
+  <div class="mats">
+    <p class="label">Materials</p>
+    <ul>
+      {p.materials.map((m) => (
+        <li>
+          <i style={`background:${m.tone}`} aria-hidden="true"></i>
+          <span><b>{m.name}</b><span class="spec">{m.spec}</span></span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</article>
+
+<style>
+  .plate {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-4);
+    padding-block: clamp(2.5rem, 6vw, 5rem);
+    border-top: 1px solid var(--line);
+  }
+  .plate:last-of-type {
+    padding-bottom: 0;
+  }
+  .photo :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    background: var(--limestone);
+  }
+  .info {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+    min-width: 0;
+  }
+  .info h3 {
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+    line-height: 1.02;
+  }
+  .tb {
+    display: grid;
+    border-top: 1px solid var(--ink);
+    font-size: var(--fs-small);
+  }
+  .tb div {
+    display: grid;
+    grid-template-columns: 6em minmax(0, 1fr);
+    gap: var(--s-2);
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tb dt {
+    font: 500 0.75rem / 1.8 var(--sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+  .story {
+    margin-top: var(--s-1);
+    max-width: 34em;
+  }
+  .light {
+    display: grid;
+    gap: var(--s-2);
+    min-width: 0;
+  }
+  .hours {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1) var(--s-2);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .hours legend {
+    float: left;
+    margin-right: var(--s-2);
+    padding: 0;
+  }
+  @media (max-width: 480px) {
+    .hours legend {
+      float: none;
+      width: 100%;
+      margin: 0 0 0.25rem;
+    }
+  }
+  .hour-opt {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 68px;
+    padding: 0 1rem;
+    border: 1px solid var(--field);
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition:
+      background-color var(--t-hover) var(--ease),
+      color var(--t-hover) var(--ease),
+      border-color var(--t-hover) var(--ease);
+  }
+  .hour-opt input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .hour-opt:hover {
+    border-color: var(--ink);
+  }
+  .hour-opt:has(input:checked) {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--chalk);
+  }
+  .hour-opt:has(input:focus-visible) {
+    outline: 2px solid var(--slate);
+    outline-offset: 3px;
+  }
+  .notes {
+    position: relative;
+    min-height: 3.2em;
+  }
+  .note {
+    margin: 0;
+    display: none;
+  }
+  .mats {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+  }
+  .mats ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-2);
+  }
+  .mats li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    font-size: var(--fs-small);
+    line-height: 1.35;
+  }
+  .mats i {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgb(0 0 0 / 0.06);
+  }
+  .mats b {
+    display: block;
+    font-weight: 500;
+  }
+  .spec {
+    display: block;
+    color: var(--fg-mute);
+    font-size: 0.85rem;
+  }
+
+  /* Light study: which hour is visible follows the checked radio, no JS needed */
+  .plate:has(input[value='08:00']:checked) :global(.pool[data-hour='08:00']),
+  .plate:has(input[value='13:00']:checked) :global(.pool[data-hour='13:00']),
+  .plate:has(input[value='18:00']:checked) :global(.pool[data-hour='18:00']) {
+    opacity: 1;
+  }
+  .plate:has(input[value='08:00']:checked) :global(.sun-dot[data-hour='08:00']),
+  .plate:has(input[value='13:00']:checked) :global(.sun-dot[data-hour='13:00']),
+  .plate:has(input[value='18:00']:checked) :global(.sun-dot[data-hour='18:00']) {
+    fill: var(--sun);
+  }
+  .plate:has(input[value='08:00']:checked) .note[data-hour='08:00'],
+  .plate:has(input[value='13:00']:checked) .note[data-hour='13:00'],
+  .plate:has(input[value='18:00']:checked) .note[data-hour='18:00'] {
+    display: block;
+  }
+
+  @media (min-width: 900px) {
+    .plate {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: clamp(1rem, 2.5vw, 2.5rem);
+      row-gap: var(--s-5);
+    }
+    .photo {
+      grid-column: 1 / 8;
+    }
+    .info {
+      grid-column: 8 / -1;
+    }
+    .light {
+      grid-column: 1 / 8;
+    }
+    .mats {
+      grid-column: 8 / -1;
+    }
+    .mats ul {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .flip .photo,
+    .flip .light {
+      grid-column: 6 / -1;
+    }
+    .flip .info,
+    .flip .mats {
+      grid-column: 1 / 6;
+    }
+    .flip .info,
+    .flip .mats {
+      grid-row: auto;
+    }
+    .flip .photo {
+      grid-row: 1;
+    }
+    .flip .info {
+      grid-row: 1;
+    }
+    .flip .light {
+      grid-row: 2;
+    }
+    .flip .mats {
+      grid-row: 2;
+    }
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+interface Props {
+  size?: number;
+  word?: boolean;
+  sub?: string;
+}
+const { size = 32, word = true, sub } = Astro.props;
+---
+
+<span class="lockup">
+  <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+    <circle class="sym-sun" cx="16" cy="7.5" r="2.4"></circle>
+    <path class="sym-line" d="M3 22.5H29M8 22.5L11.5 13.5H20.5L24 22.5"></path>
+  </svg>
+  {word && (
+    <span class="words">
+      <span class="word">Oriel</span>
+      {sub && <span class="sub">{sub}</span>}
+    </span>
+  )}
+</span>
+
+<style>
+  .lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: inherit;
+  }
+  .sym-sun {
+    fill: var(--logo-sun, var(--sun));
+  }
+  .sym-line {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: square;
+  }
+  .words {
+    display: grid;
+    line-height: 1;
+  }
+  .word {
+    font: 400 1.6rem / 1 var(--serif);
+    font-variation-settings: 'opsz' 72;
+    letter-spacing: -0.01em;
+  }
+  .sub {
+    margin-top: 0.3em;
+    font: 500 0.6rem / 1.2 var(--sans);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-mute);
+  }
+</style>

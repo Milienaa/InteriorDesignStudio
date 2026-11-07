@@ -1,0 +1,206 @@
+---
+import Logo from './Logo.astro';
+import { nav, cta, brand } from '../content/site';
+---
+
+<header class="site-header" data-header>
+  <div class="band">
+    <div class="wrap bar">
+      <a class="home" href="#top" aria-label={`${brand.name}, back to top`}>
+        <Logo size={30} sub={brand.tagline} />
+      </a>
+
+      <nav id="site-nav" class="nav" aria-label="Sections" data-nav>
+        <ul>
+          {nav.map((item) => (
+            <li><a href={item.href} data-nav-link>{item.label}</a></li>
+          ))}
+          <li class="nav-cta"><a class="btn btn-ink" href="#contact" data-nav-link>{cta.short}</a></li>
+        </ul>
+      </nav>
+
+      <div class="right">
+        <p class="hour-now label" data-hour-indicator aria-live="off">
+          <span class="hour"></span>
+        </p>
+        <a class="btn btn-ink desk-cta" href="#contact">{cta.short}</a>
+        <button class="menu" type="button" aria-expanded="false" aria-controls="site-nav" data-menu>
+          <span class="menu-bars" aria-hidden="true"></span>
+          <span class="menu-label">Menu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--chalk) 86%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    min-height: 68px;
+  }
+  .home {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+    flex: none;
+  }
+  .nav ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.75rem);
+  }
+  .nav a:not(.btn) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition:
+      color var(--t-hover) var(--ease),
+      border-color var(--t-hover) var(--ease);
+  }
+  .nav a:not(.btn):hover,
+  .nav a:not(.btn)[aria-current='true'] {
+    color: var(--slate);
+    border-color: var(--slate);
+  }
+  .nav-cta {
+    display: none;
+  }
+  .right {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+  }
+  .hour-now {
+    margin: 0;
+    min-width: 3.2em;
+    text-align: right;
+  }
+  .hour-now .hour {
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+  }
+  .hour-now:has(.hour:empty) {
+    display: none;
+  }
+  .menu {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 0.25rem;
+    border: 0;
+    background: none;
+    font: 500 0.95rem / 1 var(--sans);
+  }
+  .menu-bars {
+    position: relative;
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+    transition: background-color var(--t-open) var(--ease);
+  }
+  .menu-bars::before,
+  .menu-bars::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+    transition: transform var(--t-open) var(--ease);
+  }
+  .menu-bars::before {
+    top: -6px;
+  }
+  .menu-bars::after {
+    top: 6px;
+  }
+  .menu[aria-expanded='true'] .menu-bars {
+    background: transparent;
+  }
+  .menu[aria-expanded='true'] .menu-bars::before {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .menu[aria-expanded='true'] .menu-bars::after {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  @media (max-width: 899px) {
+    .nav {
+      position: absolute;
+      inset: 100% 0 auto 0;
+      background: var(--chalk);
+      border-bottom: 1px solid var(--line);
+      padding: var(--s-2) var(--gutter) var(--s-4);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition:
+        opacity var(--t-open) var(--ease),
+        transform var(--t-open) var(--ease),
+        visibility 0s linear var(--t-open);
+    }
+    .nav.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition:
+        opacity var(--t-open) var(--ease),
+        transform var(--t-open) var(--ease),
+        visibility 0s;
+    }
+    .nav ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .nav li {
+      border-bottom: 1px solid var(--line);
+    }
+    .nav a:not(.btn) {
+      min-height: 52px;
+      width: 100%;
+      font: 300 1.5rem / 1 var(--serif);
+      font-variation-settings: 'opsz' 36;
+      border-bottom: 0;
+    }
+    .nav-cta {
+      display: block;
+      border-bottom: 0 !important;
+      padding-top: var(--s-3);
+    }
+    .nav-cta .btn {
+      width: 100%;
+    }
+    .desk-cta {
+      display: none;
+    }
+    .menu {
+      display: inline-flex;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .menu-label {
+      display: none;
+    }
+  }
+</style>

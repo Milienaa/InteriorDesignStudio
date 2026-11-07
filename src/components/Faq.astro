@@ -1,0 +1,108 @@
+---
+import SectionHead from './SectionHead.astro';
+import { faq } from '../content/site';
+---
+
+<section id="questions" class="band" data-tone="limestone" data-section-hour={faq.hour} aria-labelledby="faq-title">
+  <div class="wrap">
+    <SectionHead hour={faq.hour} label={faq.label} title={faq.title} id="faq-title" />
+
+    <div class="list">
+      {faq.items.map((item, i) => (
+        <details class="item" name="faq">
+          <summary>
+            <span class="q-n label"><span class="hour">0{i + 1}</span></span>
+            <span class="q">{item.q}</span>
+            <span class="plus" aria-hidden="true"></span>
+          </summary>
+          <div class="a">
+            <p>{item.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .list {
+    border-top: 1px solid var(--ink);
+    max-width: 880px;
+  }
+  .item {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) 44px;
+    align-items: center;
+    column-gap: var(--s-2);
+    min-height: 64px;
+    padding-block: var(--s-2);
+    cursor: pointer;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  .q {
+    font: 400 clamp(1.125rem, 1rem + 0.6vw, 1.375rem) / 1.3 var(--serif);
+    font-variation-settings: 'opsz' 24;
+    transition: color var(--t-hover) var(--ease);
+  }
+  summary:hover .q {
+    color: var(--slate);
+  }
+  .plus {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    justify-self: end;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 1px;
+    background: currentColor;
+    transform: translate(-50%, -50%);
+    transition: transform var(--t-open) var(--ease);
+  }
+  .plus::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  .item[open] .plus::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  .a {
+    padding: 0 0 var(--s-3) 2.5rem;
+    max-width: 40em;
+    color: var(--fg-mute);
+  }
+  .a p {
+    padding-left: var(--s-2);
+  }
+  .item[open] .a {
+    animation: open var(--t-open) var(--ease);
+  }
+  @keyframes open {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 480px) {
+    summary {
+      grid-template-columns: 2rem minmax(0, 1fr) 44px;
+    }
+    .a {
+      padding-left: 2rem;
+    }
+  }
+</style>

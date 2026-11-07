@@ -1,0 +1,12 @@
+---
+import SectionHead from './SectionHead.astro';
+import ProjectPlate from './ProjectPlate.astro';
+import { work } from '../content/site';
+---
+
+<section id="work" class="band" data-tone="noon" data-section-hour={work.hour} aria-labelledby="work-title">
+  <div class="wrap">
+    <SectionHead hour={work.hour} label={work.label} title={work.title} id="work-title" lead={work.intro} />
+    {work.projects.map((p, i) => <ProjectPlate project={p} flip={i % 2 === 1} />)}
+  </div>
+</section>
